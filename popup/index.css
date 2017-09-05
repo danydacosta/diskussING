@@ -1,0 +1,15 @@
+html, body, .connect-container, .main-container {
+  width: 400px;
+  height: 500px;
+  margin: 0;
+  font-family: helvetica;
+  font-weight: 100;
+}
+
+.connect-container{
+  display: none;
+}
+
+.main-container{
+  display: all;
+}

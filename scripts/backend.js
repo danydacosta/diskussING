@@ -1,4 +1,5 @@
-console.log('background.js loaded');
+//**************BACKEND*********** */
+console.log('backend.js loaded');
 
 class Diskussing{
     constructor(){
@@ -42,6 +43,7 @@ class Diskussing{
 class Server{
     constructor(){
         this.connectedUser;
+        this.socket;
         this.channels = [];        
     }
 
@@ -81,42 +83,18 @@ class Server{
 
     }
 
-    Request(type, query, params = []){
+    Request(url, callback, type = 'GET', baseUrl = 'http://localhost:8081/'){
+        $.ajax({
+            url: baseUrl + url.split('?')[0],
+            type: type,
+            data: url.split('?')[1],
 
+            success: data => {
+                callback(data)
+            },
+            error: data => {
+                console.log('Error ' + data);
+            }
+        })
     }
 }
-
-/**
- * Programme principal
- */
-let frontend;
-let diskussing = new Diskussing();
-
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-        switch (request.directive) {
-            case "webextension-loaded":
-                let popups = chrome.extension.getViews();
-                frontend = popups[1];
-
-                //Bouton de connexion
-                frontend.$('.connectbutton').click(() => {
-                    //Récupère les informations saisies
-                    let socket = frontend.$('.connectserver').val();
-                    let username = frontend.$('.connectname').val();
-
-                    //Essaie de se connecter au serveur
-                    if(diskussing.server.Connect(socket, username) == "success"){
-                        //Affichage de l'interface principale
-                        diskussing.SwitchLoginPage(frontend);
-                    } else {
-                        //Affichage du message d'erreur
-
-                    } 
-                });
-
-                sendResponse({}); // sending back empty response to sender
-            break;
-        }
-    }
-);

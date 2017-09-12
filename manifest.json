@@ -13,7 +13,7 @@
   ],
 
   "background": {
-    "scripts": ["/include/jquery.js", "/scripts/classes.js", "/scripts/background.js"]
+    "scripts": ["/include/jquery.js", "/scripts/classes.js", "/scripts/backend.js", "/scripts/frontend.js"]
    },
 
   "browser_action": {

@@ -1,9 +1,9 @@
 console.log('classes.js loaded');
 
 class User{
-    constructor(){
-        this.id;
-        this.nick;
+    constructor(id, nick){
+        this.id = id;
+        this.nick = nick;
         this.connectChannels = [];
     }
 }

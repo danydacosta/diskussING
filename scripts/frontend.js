@@ -21,10 +21,10 @@ chrome.runtime.onMessage.addListener(
                     if(diskussing.server.Connect(socket, username) == "success"){
                         //Affichage de l'interface principale
                         diskussing.SwitchLoginPage(frontend);
-                    } else {
+                    } /*else {
                         //Affichage du message d'erreur
                         diskussing.ShowErrorModal(frontend, "Unable to connect to server.");
-                    } 
+                    } */
                 });
 
                 sendResponse({}); // sending back empty response to sender

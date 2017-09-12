@@ -23,12 +23,13 @@ class Diskussing{
     ShowErrorModal(frontend, exception){
         frontend.$('.blur').toggleClass('displaynone');
         frontend.$('.errormodal').toggleClass('displaynone');
+        frontend.$('.errormodalcontent').html(exception);
         frontend.$('.toggle').toggleClass('displaybehind');
     }
 
     CloseModal(frontend, modal){
         frontend.$('.blur').toggleClass('displaynone');
-        frontend.$('.' + modal).toggleClass('displaynone');
+        frontend.$(`.${modal}`).toggleClass('displaynone');
         frontend.$('.toggle').toggleClass('displaybehind');
     }
 
@@ -53,12 +54,19 @@ class Diskussing{
 class Server{
     constructor(){
         this.connectedUser;
-        this.socket;
+        this.address;
         this.channels = [];        
     }
 
     Connect(socket, name){
+        //Set l'adresse du serveur qui sera utilisée pour les prochaines requêtes
+        this.address = socket;
 
+        //Requête au serveur
+        this.Request(`users/regisster/${name}/`, data => {
+            //Enregistrement de l'utilisateur
+            this.connectedUser = new User(data.id, data.nick);
+        }, 'POST');
     }
 
     JoinChannel(channel){
@@ -93,7 +101,7 @@ class Server{
 
     }
 
-    Request(url, callback, type = 'GET', baseUrl = 'http://localhost:8081/'){
+    Request(url, callback, type = 'GET', baseUrl = `http://${this.address}/`){
         $.ajax({
             url: baseUrl + url.split('?')[0],
             type: type,
@@ -102,9 +110,10 @@ class Server{
             success: data => {
                 callback(data)
             },
-            error: data => {
-                console.log('Error ' + data);
+            error: function(xhr, status, error) {
+                diskussing.ShowErrorModal(frontend, xhr.responseText);
+                //console.log('Error ' + data.error);
             }
-        })
+        });
     }
 }

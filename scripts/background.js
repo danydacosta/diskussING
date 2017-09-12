@@ -1,27 +1,29 @@
+console.log('background.js loaded');
+
 class Diskussing{
     constructor(){
-        this.connectState = "false";
         this.server = new Server();
     }
 
     ShowCreateChannelWindow(){
-
+        $('.blur').toggleClass('displaynone');
+        $('.modal').toggleClass('displaynone');
+        $('.toggle').toggleClass('displaybehind');
     }
 
     ShowEditChannelWindow(title, description, keepChannel, owner){
 
     }
 
-    CloseWindow(){
-
+    CloseModal(){
+        $('.blur').toggleClass('displaynone');
+        $('.modal').toggleClass('displaynone');
+        $('.toggle').toggleClass('displaybehind');
     }
 
-    ShowLoginPage(){
-        
-    }
-
-    HideLoginPage(){
-
+    SwitchLoginPage(frontend){
+        frontend.$('.main-container').toggleClass('displaynone');
+        frontend.$('.connect-container').toggleClass('displaynone');
     }
 
     UpdateChannelSideBar(){
@@ -39,7 +41,7 @@ class Diskussing{
 
 class Server{
     constructor(){
-        this.connectedUser = new User();
+        this.connectedUser;
         this.channels = [];        
     }
 
@@ -84,37 +86,37 @@ class Server{
     }
 }
 
+/**
+ * Programme principal
+ */
+let frontend;
+let diskussing = new Diskussing();
 
-
-let diskuss = new Diskussing();
-
-  chrome.runtime.onMessage.addListener(
+chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-        if(request == "ui"){
-            sendResponse(diskuss.connectState);
-        }else{
-            diskuss.connectState = request;
+        switch (request.directive) {
+            case "webextension-loaded":
+                let popups = chrome.extension.getViews();
+                frontend = popups[1];
+
+                //Bouton de connexion
+                frontend.$('.connectbutton').click(() => {
+                    //Récupère les informations saisies
+                    let socket = frontend.$('.connectserver').val();
+                    let username = frontend.$('.connectname').val();
+
+                    //Essaie de se connecter au serveur
+                    if(diskussing.server.Connect(socket, username) == "success"){
+                        //Affichage de l'interface principale
+                        diskussing.SwitchLoginPage(frontend);
+                    } else {
+                        //Affichage du message d'erreur
+
+                    } 
+                });
+
+                sendResponse({}); // sending back empty response to sender
+            break;
         }
     }
 );
-
-$('.toggle').click(() => {
-    $('.blur').toggleClass('displaynone');
-});
-
-$('.connectbutton').click(() => {
-    $('.main-container').toggleClass('displaynone');
-    $('.connect-container').toggleClass('displaynone');
-});
-
-$('.addbutton').click(() => {
-    $('.blur').toggleClass('displaynone');
-    $('.modal').toggleClass('displaynone');
-    $('.toggle').toggleClass('displaybehind');
-});
-
-$('.modalclose').click(() => {
-    $('.blur').toggleClass('displaynone');
-    $('.modal').toggleClass('displaynone');
-    $('.toggle').toggleClass('displaybehind');
-});

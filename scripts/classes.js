@@ -1,8 +1,10 @@
+console.log('classes.js loaded');
+
 class User{
     constructor(){
         this.id;
         this.nick;
-        this.connectChannels[];
+        this.connectChannels = [];
     }
 }
 

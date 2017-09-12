@@ -34,14 +34,18 @@
       </select>
     </div>
     <div class="connect-container">
-      <h2>diskussING</h2>
+      <h2 class="connecttitle">diskussING</h2>
 
-      <input type="text" placeholder="Server adress" name="server" value="localhost:8081" />
-      <input type="text" placeholder="Nickname" name="server" value="Dany" />
-      <input type="submit" class="sub" name="connect" />
+      <label class="connectserverlabel">Server address:</label>
+      <input type="text" placeholder="Server adress" class="connectserver" value="localhost:8081" />
+
+      <label class="connectnamelabel">Username:</label>
+      <input type="text" placeholder="Nickname" class="connectname" value="Dany" />
+
+      <label class="connectbutton">></label>
     </div>
 
-    <div class="main-container">
+    <div class="main-container displaynone">
       <input type="checkbox" id="slide" />
     	<div class="container">
         <div class="toolbar">

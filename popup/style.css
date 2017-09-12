@@ -8,14 +8,6 @@ html, body, .connect-container, .main-container, .messagetext {
   font-family: 'Roboto', sans-serif;
 }
 
-.connect-container{
-  display: none;
-}
-
-.main-container{
-  display: all;
-}
-
 .blur {
   z-index: 9;
   background: rgba(0, 0, 0, 0.61);
@@ -28,6 +20,63 @@ html, body, .connect-container, .main-container, .messagetext {
   display: none;
 }
 /* END MAIN */
+
+/**************************/
+/********CONNECT***********/
+/**************************/
+.connect-container{
+  background-color: #222831;
+}
+
+.connecttitle{
+  color: #eeeeee;
+  width: 400px;
+  float: left;
+  text-align: center;
+  margin-top: 15px;
+  font-size: 1.5em;
+}
+
+.connectserverlabel{
+  color: white;
+  position: fixed;
+  font-size: 1em;
+  left: 80px;
+  top: 115px;
+}
+
+.connectserver{
+  width: 250px;
+  position: fixed;
+  left: 80px;
+  top: 145px;
+}
+
+.connectnamelabel{
+  color: white;
+  position: fixed;
+  font-size: 1em;
+  left: 80px;
+  top: 205px;
+}
+
+.connectname{
+  width: 250px;
+  position: fixed;
+  left: 80px;
+  top: 235px;
+}
+
+.connectbutton{
+  color: #eeeeee;
+  font-size: 2.5em;
+  cursor: pointer;
+  position: fixed;
+  top: 440px;
+  left: 185px;
+}
+
+/* END CONNECT */
 
 /**************************/
 /********TOOLBAR***********/

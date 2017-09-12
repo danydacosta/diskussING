@@ -370,4 +370,41 @@ html, body, .connect-container, .main-container, .messagetext {
   top: 235px;
 }
 /* END CHANNEL OWNER */
+
+/* ERROR MODAL */
+.errormodal{
+  width: 300px;
+  height: 200px;
+  position: fixed;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 50px;
+  margin-top: 120px;
+  background-color: #eeeeee;
+  z-index: 99999;
+}
+
+.errormodaltitle{
+  position: fixed;
+  font-size: 1.8em;
+  left: 170px;
+  top: 140px;
+}
+
+.errormodalcontent{
+  position: fixed;
+  font-size: 1em;
+  left: 80px;
+  top: 190px;
+}
+
+.errormodalclose{
+  color: #222831;
+  font-size: 1.5em;
+  cursor: pointer;
+  position: fixed;
+  left: 325px;
+  top: 120px;
+}
+/* END ERROR MODAL */
 /* END MODALS */

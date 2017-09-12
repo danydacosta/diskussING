@@ -23,7 +23,7 @@ chrome.runtime.onMessage.addListener(
                         diskussing.SwitchLoginPage(frontend);
                     } else {
                         //Affichage du message d'erreur
-
+                        diskussing.ShowErrorModal(frontend, "Unable to connect to server.");
                     } 
                 });
 

@@ -1,4 +1,4 @@
-//**************FRONTEND*********** */
+//**************POPUP*********** */
 console.log('index.js loaded');
 
 //Au lancement de l'extension, on signal au backend que le lancement de celle-ci.

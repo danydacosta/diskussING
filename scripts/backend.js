@@ -6,20 +6,30 @@ class Diskussing{
         this.server = new Server();
     }
 
-    ShowCreateChannelWindow(){
-        $('.blur').toggleClass('displaynone');
-        $('.modal').toggleClass('displaynone');
-        $('.toggle').toggleClass('displaybehind');
+    ShowCreateChannelModal(frontend){
+        frontend.$('.blur').toggleClass('displaynone');
+        frontend.$('.modal').toggleClass('displaynone');
+        frontend.$('.toggle').toggleClass('displaybehind');
     }
 
-    ShowEditChannelWindow(title, description, keepChannel, owner){
-
+    ShowEditChannelModal(frontend, title, description, keepChannel, owner){
+        frontend.$('.blur').toggleClass('displaynone');
+        frontend.$('.modal').toggleClass('displaynone');
+        frontend.$('.channelownerlabel').toggleClass('displaynone');
+        frontend.$('.channelowner').toggleClass('displaynone');
+        frontend.$('.toggle').toggleClass('displaybehind');
     }
 
-    CloseModal(){
-        $('.blur').toggleClass('displaynone');
-        $('.modal').toggleClass('displaynone');
-        $('.toggle').toggleClass('displaybehind');
+    ShowErrorModal(frontend, exception){
+        frontend.$('.blur').toggleClass('displaynone');
+        frontend.$('.errormodal').toggleClass('displaynone');
+        frontend.$('.toggle').toggleClass('displaybehind');
+    }
+
+    CloseModal(frontend, modal){
+        frontend.$('.blur').toggleClass('displaynone');
+        frontend.$('.' + modal).toggleClass('displaynone');
+        frontend.$('.toggle').toggleClass('displaybehind');
     }
 
     SwitchLoginPage(frontend){

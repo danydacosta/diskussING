@@ -63,10 +63,18 @@ class Server{
         this.address = socket;
 
         //Requête au serveur
-        this.Request(`users/regisster/${name}/`, data => {
+        this.Request(`users/register/${name}/`, data => {
             //Enregistrement de l'utilisateur
             this.connectedUser = new User(data.id, data.nick);
+            console.log(this.connectedUser);
         }, 'POST');
+
+        console.log(this.connectedUser);
+        if(this.connectedUser != null){
+            return 'success';
+        } else {
+            return '';
+        }
     }
 
     JoinChannel(channel){
@@ -108,11 +116,11 @@ class Server{
             data: url.split('?')[1],
 
             success: data => {
-                callback(data)
+                callback(data);
             },
             error: function(xhr, status, error) {
+                //Affichage du message d'erreur
                 diskussing.ShowErrorModal(frontend, xhr.responseText);
-                //console.log('Error ' + data.error);
             }
         });
     }

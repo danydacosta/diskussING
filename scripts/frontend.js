@@ -18,13 +18,15 @@ chrome.runtime.onMessage.addListener(
                     let username = frontend.$('.connectname').val();
 
                     //Essaie de se connecter au serveur
-                    if(diskussing.server.Connect(socket, username) == "success"){
+                    if(diskussing.server.Connect(socket, username) == 'success'){
                         //Affichage de l'interface principale
                         diskussing.SwitchLoginPage(frontend);
-                    } /*else {
-                        //Affichage du message d'erreur
-                        diskussing.ShowErrorModal(frontend, "Unable to connect to server.");
-                    } */
+                    }
+                });
+
+                //Fermeture des fenêtres modal
+                frontend.$('.close').click(function() {
+                    diskussing.CloseModal(frontend, $(this).parent().prop('className'));
                 });
 
                 sendResponse({}); // sending back empty response to sender

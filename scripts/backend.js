@@ -63,7 +63,7 @@ class Server{
         this.address = socket;
 
         //Requête au serveur
-        this.Request(`users/register/${name}/`, data => {
+        this.Request(`users/regisster/${name}/`, data => {
             //Enregistrement de l'utilisateur
             this.connectedUser = new User(data.id, data.nick);
             console.log(this.connectedUser);
@@ -115,7 +115,7 @@ class Server{
             },
             error: function(xhr, status, error) {
                 //Affichage du message d'erreur
-                diskussing.ShowErrorModal(frontend, xhr.responseText);
+                diskussing.ShowErrorModal(frontend, JSON.parse(xhr.responseText).error);
             }
         });
     }

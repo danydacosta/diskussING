@@ -18,10 +18,7 @@ chrome.runtime.onMessage.addListener(
                     let username = frontend.$('.connectname').val();
 
                     //Essaie de se connecter au serveur
-                    if(diskussing.server.Connect(socket, username) == 'success'){
-                        //Affichage de l'interface principale
-                        diskussing.SwitchLoginPage(frontend);
-                    }
+                    diskussing.server.Connect(socket, username);
                 });
 
                 //Fermeture des fenêtres modal

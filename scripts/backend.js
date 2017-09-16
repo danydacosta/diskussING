@@ -67,14 +67,9 @@ class Server{
             //Enregistrement de l'utilisateur
             this.connectedUser = new User(data.id, data.nick);
             console.log(this.connectedUser);
+            //Affichage de l'interface principale
+            diskussing.SwitchLoginPage(frontend);
         }, 'POST');
-
-        console.log(this.connectedUser);
-        if(this.connectedUser != null){
-            return 'success';
-        } else {
-            return '';
-        }
     }
 
     JoinChannel(channel){

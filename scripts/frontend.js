@@ -26,6 +26,13 @@ chrome.runtime.onMessage.addListener(
                     diskussing.CloseModal(frontend, $(this).parent().prop('className'));
                 });
 
+                //Affichage de la sidebar
+                frontend.$('.toggle').click(() => {                    
+                    frontend.$('.blur').toggleClass('displaynone');
+                    //Mise à jour des éléments dans la sidebar
+                    diskussing.UpdateChannelSideBar(frontend);
+                });
+
                 sendResponse({}); // sending back empty response to sender
             break;
         }

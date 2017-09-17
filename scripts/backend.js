@@ -87,6 +87,8 @@ class Server{
                 switch(element.type){
                     case 'channelCreate':
                         console.log(element.channel.name + ' has been created!');
+                        //Met à jour la barre latérale
+                        diskussing.UpdateChannelSideBar(frontend);
                     break;
 
                     case 'channelJoin':

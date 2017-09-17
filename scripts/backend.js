@@ -43,8 +43,8 @@ class Diskussing{
         this.server.FetchChannels();
         //Rafraichit la liste avec les salons existants sur le serveur
         this.server.channels.forEach(function(element) {
-            frontend.$('.sidebar ul').append('<li><a href="#">' + element.name + '</a></li>');
-        }, this);        
+            frontend.$('.sidebar ul').append('<li class="channel"><a href="#">' + element.name + '</a></li>');
+        }, this);
     }
 
     ShowChat(){

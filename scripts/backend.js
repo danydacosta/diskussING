@@ -41,7 +41,7 @@ class Diskussing{
     SwitchSidebar(){
         frontend.$('.blur').toggleClass('displaynone');
         //Mise à jour des éléments dans la sidebar
-        this.UpdateChannelSideBar(frontend);
+        this.server.FetchChannels();
     }
 
     HideSidebar(){
@@ -50,9 +50,9 @@ class Diskussing{
         this.SwitchSidebar();
     }
 
-    UpdateChannelSideBar(frontend){
-        //Cherche les salons existants
-        this.server.FetchChannels();
+    UpdateChannelSideBar(){
+        //Vide l'ancienne liste de la sidebar
+        frontend.$('.sidebar ul li:not(:first)').empty();
         //Rafraichit la liste avec les salons existants sur le serveur
         this.server.channels.forEach(function(element) {
             frontend.$('.sidebar ul').append('<li><a href="#">' + element.name + '</a></li>');
@@ -101,8 +101,8 @@ class Server{
                 switch(element.type){
                     case 'channelCreate':
                         console.log('[NOTICE] ' + element.channel.name + ' has been created!');
-                        //Met à jour la barre latérale
-                        diskussing.UpdateChannelSideBar(frontend);
+                        //Mise à jour des éléments dans la sidebar
+                        diskussing.server.FetchChannels();
                     break;
 
                     case 'channelJoin':
@@ -141,8 +141,10 @@ class Server{
     FetchChannels(){
         //Requête au serveur
         this.Request(`channels/`, data => {
-            console.log(data);
+            console.log('The channel fetch has discoverd ' + data);
             this.channels = data;
+            //Met à jour la barre latérale
+            diskussing.UpdateChannelSideBar();
         });
     }
 

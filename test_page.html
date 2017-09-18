@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>diskussING TEST</title>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+<body>
+    <button class="connect">Connect</button>
+    <button class="create1">Create channel 1</button>
+    <button class="create2">Create channel 2</button>
+    <script>
+        let id;
+
+        $('.connect').click(() => {
+            Request(`users/register/Test/`, data => {
+                id = data.id;
+                console.log('Connected with id: ' + id + ' and name: ' + data.nick);
+                setInterval(FetchNotices, 2000);
+            }, 'POST');
+        });
+
+        $('.create1').click(() => {
+            Request(`user/${id}/channels/Channel 1/join/`, data => {
+                console.log('Channel ' + data.channel.name + ' created !');
+            }, 'PUT');
+        });
+
+        $('.create2').click(() => {
+            Request(`user/${id}/channels/Channel 2/join/`, data => {
+                console.log('Channel ' + data.channel.name + ' created !');
+            }, 'PUT');
+        });
+
+        function Request(url, callback, type = 'GET', baseUrl = `http://localhost:8081/`){
+            $.ajax({
+                url: baseUrl + url.split('?')[0],
+                type: type,
+                data: url.split('?')[1],
+
+                success: data => {
+                    callback(data);
+                },
+                error: function(xhr, status, error) {
+                    //Affichage du message d'erreur
+                    console.log(xhr.status);
+                }
+            });
+        }
+
+        function FetchNotices(){
+            //Requête au serveur
+            Request(`user/${id}/notices`, data => {
+            });
+        }
+    </script>
+</body>
+</html>

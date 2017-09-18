@@ -23,7 +23,7 @@ chrome.runtime.onMessage.addListener(
 
                 //Fermeture des fenêtres modal
                 frontend.$('.close').click(function() {
-                    diskussing.CloseModal(frontend, $(this).parent().prop('className'));
+                    diskussing.CloseModal($(this).parent().prop('className'));
                 });
 
                 //Affichage de la sidebar

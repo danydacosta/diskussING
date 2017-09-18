@@ -38,6 +38,18 @@ class Diskussing{
         frontend.$('.connect-container').toggleClass('displaynone');
     }
 
+    SwitchSidebar(){
+        frontend.$('.blur').toggleClass('displaynone');
+        //Mise à jour des éléments dans la sidebar
+        this.UpdateChannelSideBar(frontend);
+    }
+
+    HideSidebar(){
+        //Ferme la sidebar
+        frontend.$('#slide').prop('checked', false);
+        this.SwitchSidebar();
+    }
+
     UpdateChannelSideBar(frontend){
         //Cherche les salons existants
         this.server.FetchChannels();
@@ -48,7 +60,7 @@ class Diskussing{
     }
 
     ShowChat(){
-
+        frontend.$('.chat').toggleClass('displaynone');
     }
 
     HideChat(){
@@ -120,7 +132,14 @@ class Server{
     }
 
     JoinChannel(channel){
-
+        //Requête au serveur
+        this.Request(`user/${this.connectedUser.id}/channels/${channel}/join/`, data => {
+            console.log(this.connectedUser.nick + ' has join the channel ' + data.channel.name);
+            //Affichage du chat
+            diskussing.ShowChat();
+            //Ferme la sidebar
+            diskussing.HideSidebar();
+        }, 'PUT');
     }
 
     SendMessage(channel, message){

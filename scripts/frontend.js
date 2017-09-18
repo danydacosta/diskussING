@@ -28,15 +28,14 @@ chrome.runtime.onMessage.addListener(
 
                 //Affichage de la sidebar
                 frontend.$('.toggle').click(() => {                    
-                    frontend.$('.blur').toggleClass('displaynone');
-                    //Mise à jour des éléments dans la sidebar
-                    diskussing.UpdateChannelSideBar(frontend);
+                    diskussing.SwitchSidebar();
                 });
                 
                 //Clique sur salon (utilisation de delegate car les salons sont ajoutés dynamiquement)
                 frontend.$('.sidebar').delegate('a', 'click', function() {
                     //Récupère le nom du salon
                     let channel = frontend.$(this).text();
+                    diskussing.server.JoinChannel(channel);
                     console.log('Channel ' + channel + ' clicked!');
                 });
 

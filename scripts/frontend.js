@@ -39,6 +39,15 @@ chrome.runtime.onMessage.addListener(
                     console.log('Channel ' + channel + ' clicked!');
                 });
 
+                //Envoie un message
+                frontend.$('.sendbutton').click(() => {
+                    //Récupère le nom du salon et le message
+                    let channel = frontend.$('.currentchannelname').val();
+                    let message = frontend.$('.messagetext').val();
+
+                    diskussing.server.SendMessage(channel, message);
+                });
+
                 sendResponse({}); // sending back empty response to sender
             break;
         }

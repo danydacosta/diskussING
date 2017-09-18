@@ -16,7 +16,6 @@ class Channel{
         this.owner;
         this.messages = [];
         this.notifications;
-        this.isCurrentChannel;
     }
 }
 

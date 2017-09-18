@@ -199,6 +199,10 @@ html, body, .connect-container, .main-container, .messagetext {
   float: left;
 }
 
+.currentchannelname{
+  display: none;
+}
+
 .messagelist{
   overflow-x: hidden;
   overflow-y: auto;

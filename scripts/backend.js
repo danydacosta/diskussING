@@ -59,8 +59,10 @@ class Diskussing{
         }, this);
     }
 
-    ShowChat(){
+    ShowChat(channel){
         frontend.$('.chat').toggleClass('displaynone');
+        //Ajout d'un champ permettant l'identification du salon pour ledit chat
+        frontend.$('.chat').append(`<input class="currentchannelname" value="${channel}" />`);
     }
 
     HideChat(){
@@ -98,25 +100,38 @@ class Server{
                 console.log(element);
                 switch(element.type){
                     case 'channelCreate':
-                        console.log(element.channel.name + ' has been created!');
+                        console.log('[NOTICE] ' + element.channel.name + ' has been created!');
                         //Met à jour la barre latérale
                         diskussing.UpdateChannelSideBar(frontend);
                     break;
 
                     case 'channelJoin':
-                        console.log(element.nick + ' has been join the channel ' + element.channel.name);
+                        console.log('[NOTICE] ' + element.nick + ' has been join the channel ' + element.channel.name);
                     break;
 
                     case 'channelMessage':
-                        console.log(element.nick + ' has sent the message ' + element.message + ' in the channel ' + element.channel.name);
+                        console.log('[NOTICE] ' + element.nick + ' has sent the message ' + element.message + ' in the channel ' + element.channel.name);
+                        //Formate la date
+                        let date = new Date(element.time);
+                        let formatedDate = date.getHours() + ':' + date.getMinutes();
+                        //Ajoute le message dans le chat
+                        frontend.$('.chat ul').append(`<li class="message">
+                                                            <hr class="messagesperarator">
+                                                            <div class="messagetextcontent">
+                                                            <label class="messagefrom">${element.nick} : </label>
+                                                            <label class="messagecontent">${element.message}</label>
+                                                            <label class="messagedate">${formatedDate}</label>
+                                                            </div>
+                                                        </li>`);
+
                     break;
 
                     case 'channelLeave':
-                        console.log(element.nick + ' has leaved the channel ' + element.channel.name);
+                        console.log('[NOTICE] ' + element.nick + ' has leaved the channel ' + element.channel.name);
                     break;
 
                     case 'channelOwner':
-                        console.log('Owner of the channel ' + element.channel.name + ' is now ' + element.channel.owner + ' (previously ' + element.nick + ')');
+                        console.log('[NOTICE] Owner of the channel ' + element.channel.name + ' is now ' + element.channel.owner + ' (previously ' + element.nick + ')');
                     break;
                 }
             }, this);
@@ -136,14 +151,17 @@ class Server{
         this.Request(`user/${this.connectedUser.id}/channels/${channel}/join/`, data => {
             console.log(this.connectedUser.nick + ' has join the channel ' + data.channel.name);
             //Affichage du chat
-            diskussing.ShowChat();
+            diskussing.ShowChat(channel);
             //Ferme la sidebar
             diskussing.HideSidebar();
         }, 'PUT');
     }
 
     SendMessage(channel, message){
-
+        //Requête au serveur
+        this.Request(`user/${this.connectedUser.id}/channels/${channel}/say/?message=${message}`, data => {
+            console.log(this.connectedUser.nick + ' sent ' + data.message + ' to the channel ' + channel);            
+        }, 'PUT');
     }
 
     LeaveChannel(channel){

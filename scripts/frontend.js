@@ -32,17 +32,13 @@ chrome.runtime.onMessage.addListener(
                     //Mise à jour des éléments dans la sidebar
                     diskussing.UpdateChannelSideBar(frontend);
                 });
-
                 
-                //Clique sur salon
-                $('.channels').on('click', "li", function () {      //Fonctionne pas.
-                    console.log('clicked!');
-                });
-                /*frontend.$('.sidebar ul li').click(() => {
+                //Clique sur salon (utilisation de delegate car les salons sont ajoutés dynamiquement)
+                frontend.$('.sidebar').delegate('a', 'click', function() {
                     //Récupère le nom du salon
-                    let channel = frontend.$('.channel a').val();
-                    console.log('Channel ' + channel + 'clicked!');
-                });*/
+                    let channel = frontend.$(this).text();
+                    console.log('Channel ' + channel + ' clicked!');
+                });
 
                 sendResponse({}); // sending back empty response to sender
             break;

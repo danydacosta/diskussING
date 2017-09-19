@@ -68,8 +68,31 @@ class Diskussing{
 
     ShowChat(channel){
         frontend.$('.chat').toggleClass('displaynone');
-        //Ajout d'un champ permettant l'identification du salon pour ledit chat
-        frontend.$('.chat').append(`<input class="currentchannelname" value="${channel}" />`);
+    }
+
+    ShowChannel(channelName){
+        //Cache tous les autres salons
+        $('.messagelist').each(function(i, obj) {
+            $(this).toggleClass('displaynone');
+        });
+
+        //Affiche le salon désiré
+        $(`.${channelName.replace(" ", "-")}`).toggleClass('displaynone');
+        //Indique au frontend le salon actuellement affiché
+        frontend.$('.currentchannel').val('');
+        frontend.$('.currentchannel').val(`${channelName.replace(" ", "-")}`);
+    }
+
+    CreateChannel(channelName){
+        //Cache tous les autres salons
+        $('.messagelist').each(function(i, obj) {
+            $(this).toggleClass('displaynone');
+        });
+        //génération d'un élément HTML "chat"
+        frontend.$('.chat').append(`<ul class="messagelist ${channelName.replace(" ", "-")}"></ul>`);
+        //Indique au frontend le salon actuellement affiché
+        frontend.$('.currentchannel').val('');
+        frontend.$('.currentchannel').val(`${channelName.replace(" ", "-")}`);
     }
 
     HideChat(){
@@ -100,7 +123,7 @@ class Server{
         }, 'POST');
     }
     
-    FetchNotices(){ //Utilisation de chemin absolu de classe car la méthode est appelée depuis le callback de request
+    FetchNotices(){
         //Requête au serveur
         new Diskussing().server.Request(`user/${new Diskussing().server.connectedUser.id}/notices`, data => {
             data.forEach(function(element) {
@@ -179,14 +202,28 @@ class Server{
     }
 
     JoinChannel(channel){
-        //Requête au serveur
-        this.Request(`user/${this.connectedUser.id}/channels/${channel}/join/`, data => {
-            console.log(this.connectedUser.nick + ' has join the channel ' + data.channel.name);
-            //Affichage du chat
-            new Diskussing().ShowChat(channel);
+        //Détermine si l'utilisateur s'est déjà connecté à ce salon
+        if(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.connectedUser.connectChannels, channel) != null){
+            //Affiche le salon
+            new Diskussing().ShowChannel(channel);
             //Ferme la sidebar
             new Diskussing().HideSidebar();
-        }, 'PUT');
+        } else {
+            //Requête au serveur
+            this.Request(`user/${this.connectedUser.id}/channels/${channel}/join/`, data => {
+                console.log(this.connectedUser.nick + ' has join the channel ' + data.channel.name);
+                //Si c'est la première fois que l'utilisateur se connecte à un salon, on affiche "chat"
+                if(typeof new Diskussing().server.connectedUser.connectChannels == 'undefined' || new Diskussing().server.connectedUser.connectChannels.length == 0){
+                    new Diskussing().ShowChat();
+                }
+                //Ajout du salon dans la liste des salons connectés de l'utilisateur            
+                new Diskussing().server.connectedUser.connectChannels.push(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.channels, channel));
+                //Crée le salon
+                new Diskussing().CreateChannel(channel);
+                //Ferme la sidebar
+                new Diskussing().HideSidebar();
+            }, 'PUT');
+        }
     }
 
     SendMessage(channel, message){
@@ -199,7 +236,7 @@ class Server{
             //Ajoute un message dans l'objet salon
             this.AddMessageToChat(channel, new Diskussing().server.connectedUser.nick, message, formatedDate);
             //Ajoute un message dans le chat(graphiquement)
-            frontend.$('.chat ul').append(`<li class="message">
+            frontend.$(`.messagelist ${channel.replace(" ", "-")}`).append(`<li class="message">
                                                 <hr class="messagesperarator">
                                                 <div class="messagetextcontent">
                                                 <label class="messagefrom">${new Diskussing().server.connectedUser.nick} : </label>
@@ -207,7 +244,6 @@ class Server{
                                                 <label class="messagedate">${formatedDate}</label>
                                                 </div>
                                             </li>`);  
-                                            console.log(new Diskussing().server);  
         }, 'PUT');
     }
 
@@ -254,5 +290,16 @@ class Server{
                 element.messages.push(new Message(fromNick, message, date));
             }
         });
+    }
+
+    GetChannelObjectFromName(channelArray, channelName){
+        //Parcours la liste des salons et cherche le salon avec le nom "channelName"
+        for(var i = 0; i < channelArray.length; i++) {
+            if(channelArray[i].name == channelName){
+                return channelArray[i];
+            } else {
+                return null;
+            }
+        }
     }
 }

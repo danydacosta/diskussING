@@ -1,9 +1,16 @@
 //**************BACKEND*********** */
 console.log('backend.js loaded');
 
+let diskussing = null; // Singleton
+
 class Diskussing{
     constructor(){
-        this.server = new Server();
+        if (!diskussing) {
+            this.server = new Server();
+            diskussing = this;
+        }
+
+        return diskussing;
     }
 
     ShowCreateChannelModal(){
@@ -54,7 +61,7 @@ class Diskussing{
         //Vide l'ancienne liste de la sidebar
         frontend.$('.sidebar ul li:not(:first)').empty();
         //Rafraichit la liste avec les salons existants sur le serveur
-        this.server.channels.forEach(function(element) {
+        new Diskussing().server.channels.forEach(function(element) {
             frontend.$('.sidebar ul').append('<li><a href="#">' + element.name + '</a></li>');
         }, this);
     }
@@ -87,7 +94,7 @@ class Server{
             this.connectedUser = new User(data.id, data.nick);                  
             console.log(this.connectedUser);
             //Affichage de l'interface principale
-            diskussing.SwitchLoginPage(frontend);
+            new Diskussing().SwitchLoginPage(frontend);
             //Rafraichissement des notices
             setInterval(this.FetchNotices, 2000);
         }, 'POST');
@@ -95,14 +102,14 @@ class Server{
     
     FetchNotices(){ //Utilisation de chemin absolu de classe car la méthode est appelée depuis le callback de request
         //Requête au serveur
-        diskussing.server.Request(`user/${diskussing.server.connectedUser.id}/notices`, data => {
+        new Diskussing().server.Request(`user/${new Diskussing().server.connectedUser.id}/notices`, data => {
             data.forEach(function(element) {
                 console.log(element);
                 switch(element.type){
                     case 'channelCreate':
                         console.log('[NOTICE] ' + element.channel.name + ' has been created!');
                         //Mise à jour des éléments dans la sidebar
-                        diskussing.server.FetchChannels();
+                        new Diskussing().server.FetchChannels();
                     break;
 
                     case 'channelJoin':
@@ -115,8 +122,11 @@ class Server{
                         let date = new Date(element.time);
                         let formatedDate = ("0" + date.getHours()).slice(-2) + ':' + ("0" + date.getMinutes()).slice(-2); 
                         //Ajoute le message dans le chat seulement si c'est un message entrant
-                        if(diskussing.server.connectedUser.nick != element.nick)
+                        if(new Diskussing().server.connectedUser.nick != element.nick)
                         {
+                            //Ajoute un message dans l'objet salon
+                            new Diskussing().server.AddMessageToChat(element.channel.name, element.nick, element.message, formatedDate);                            
+                            //Ajout du message (graphiquement)
                             frontend.$('.chat ul').append(`<li class="message">
                                                                 <hr class="messagesperarator">
                                                                 <div class="messagetextcontent">
@@ -145,9 +155,26 @@ class Server{
         //Requête au serveur
         this.Request(`channels/`, data => {
             console.log('The channel fetch has discoverd ' + data);
-            this.channels = data;
-            //Met à jour la barre latérale
-            diskussing.UpdateChannelSideBar();
+            
+            //Si pas de nouveau salon depuis le dernier fetch, on ne fait rien
+            let i = -1;
+            data.forEach(function(element){ 
+                i = i + 1;               
+                var result = $.grep(new Diskussing().server.channels, function(element){ 
+                    if(new Diskussing().server.channels[i] !== void 0){
+                        return element.name == new Diskussing().server.channels[i].name; 
+                    }else{
+                        return 0;
+                    }
+                });
+
+                if (result.length == 0) {
+                    //Nouvel élément
+                    console.log('New element "' + element.name + '" was found at index "' + i + '"');
+                    new Diskussing().server.channels.push(new Channel(element.name, element.description, element.keep, element.owner));
+                    new Diskussing().UpdateChannelSideBar();
+                }
+            });
         });
     }
 
@@ -156,9 +183,9 @@ class Server{
         this.Request(`user/${this.connectedUser.id}/channels/${channel}/join/`, data => {
             console.log(this.connectedUser.nick + ' has join the channel ' + data.channel.name);
             //Affichage du chat
-            diskussing.ShowChat(channel);
+            new Diskussing().ShowChat(channel);
             //Ferme la sidebar
-            diskussing.HideSidebar();
+            new Diskussing().HideSidebar();
         }, 'PUT');
     }
 
@@ -169,15 +196,18 @@ class Server{
             //Formate la date       
             let date = new Date();            
             let formatedDate = ("0" + date.getHours()).slice(-2) + ':' + ("0" + date.getMinutes()).slice(-2); 
-            //Ajoute un message dans le chat
+            //Ajoute un message dans l'objet salon
+            this.AddMessageToChat(channel, new Diskussing().server.connectedUser.nick, message, formatedDate);
+            //Ajoute un message dans le chat(graphiquement)
             frontend.$('.chat ul').append(`<li class="message">
                                                 <hr class="messagesperarator">
                                                 <div class="messagetextcontent">
-                                                <label class="messagefrom">${diskussing.server.connectedUser.nick} : </label>
+                                                <label class="messagefrom">${new Diskussing().server.connectedUser.nick} : </label>
                                                 <label class="messagecontent">${message}</label>
                                                 <label class="messagedate">${formatedDate}</label>
                                                 </div>
-                                            </li>`);    
+                                            </li>`);  
+                                            console.log(new Diskussing().server);  
         }, 'PUT');
     }
 
@@ -212,7 +242,16 @@ class Server{
             },
             error: function(xhr, status, error) {
                 //Affichage du message d'erreur
-                diskussing.ShowErrorModal(frontend, JSON.parse(xhr.responseText).error);
+                new Diskussing().ShowErrorModal(frontend, JSON.parse(xhr.responseText).error);
+            }
+        });
+    }
+
+    AddMessageToChat(channelName, fromNick, message, date){
+        //Parcours la liste des salons et ajoute le message
+        this.channels.forEach(function(element) {
+            if(element.name == channelName){
+                element.messages.push(new Message(fromNick, message, date));
             }
         });
     }

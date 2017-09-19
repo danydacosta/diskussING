@@ -2,7 +2,6 @@
 console.log('frontend.js loaded');
 
 let frontend;
-let diskussing = new Diskussing();
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
@@ -18,24 +17,24 @@ chrome.runtime.onMessage.addListener(
                     let username = frontend.$('.connectname').val();
 
                     //Essaie de se connecter au serveur
-                    diskussing.server.Connect(socket, username);
+                    new Diskussing().server.Connect(socket, username);
                 });
 
                 //Fermeture des fenêtres modal
                 frontend.$('.close').click(function() {
-                    diskussing.CloseModal($(this).parent().prop('className'));
+                    new Diskussing().CloseModal($(this).parent().prop('className'));
                 });
 
                 //Affichage de la sidebar
                 frontend.$('.toggle').click(() => {                    
-                    diskussing.SwitchSidebar();
+                    new Diskussing().SwitchSidebar();
                 });
                 
                 //Clique sur salon (utilisation de delegate car les salons sont ajoutés dynamiquement)
                 frontend.$('.sidebar').delegate('a', 'click', function() {
                     //Récupère le nom du salon
                     let channel = frontend.$(this).text();
-                    diskussing.server.JoinChannel(channel);
+                    new Diskussing().server.JoinChannel(channel);
                     console.log('Channel ' + channel + ' clicked!');
                 });
 
@@ -45,7 +44,7 @@ chrome.runtime.onMessage.addListener(
                     let channel = frontend.$('.currentchannelname').val();
                     let message = frontend.$('.messagetext').val();
 
-                    diskussing.server.SendMessage(channel, message);
+                    new Diskussing().server.SendMessage(channel, message);
                 });
 
                 sendResponse({}); // sending back empty response to sender

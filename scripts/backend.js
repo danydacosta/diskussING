@@ -113,16 +113,19 @@ class Server{
                         console.log('[NOTICE] ' + element.nick + ' has sent the message ' + element.message + ' in the channel ' + element.channel.name);
                         //Formate la date
                         let date = new Date(element.time);
-                        let formatedDate = date.getHours() + ':' + date.getMinutes();
-                        //Ajoute le message dans le chat
-                        frontend.$('.chat ul').append(`<li class="message">
-                                                            <hr class="messagesperarator">
-                                                            <div class="messagetextcontent">
-                                                            <label class="messagefrom">${element.nick} : </label>
-                                                            <label class="messagecontent">${element.message}</label>
-                                                            <label class="messagedate">${formatedDate}</label>
-                                                            </div>
-                                                        </li>`);
+                        let formatedDate = ("0" + date.getHours()).slice(-2) + ':' + ("0" + date.getMinutes()).slice(-2); 
+                        //Ajoute le message dans le chat seulement si c'est un message entrant
+                        if(diskussing.server.connectedUser.nick != element.nick)
+                        {
+                            frontend.$('.chat ul').append(`<li class="message">
+                                                                <hr class="messagesperarator">
+                                                                <div class="messagetextcontent">
+                                                                <label class="messagefrom">${element.nick} : </label>
+                                                                <label class="messagecontent">${element.message}</label>
+                                                                <label class="messagedate">${formatedDate}</label>
+                                                                </div>
+                                                            </li>`);
+                        }
 
                     break;
 
@@ -162,7 +165,19 @@ class Server{
     SendMessage(channel, message){
         //Requête au serveur
         this.Request(`user/${this.connectedUser.id}/channels/${channel}/say/?message=${message}`, data => {
-            console.log(this.connectedUser.nick + ' sent ' + data.message + ' to the channel ' + channel);            
+            console.log(this.connectedUser.nick + ' sent ' + data.message + ' to the channel ' + channel);
+            //Formate la date       
+            let date = new Date();            
+            let formatedDate = ("0" + date.getHours()).slice(-2) + ':' + ("0" + date.getMinutes()).slice(-2); 
+            //Ajoute un message dans le chat
+            frontend.$('.chat ul').append(`<li class="message">
+                                                <hr class="messagesperarator">
+                                                <div class="messagetextcontent">
+                                                <label class="messagefrom">${diskussing.server.connectedUser.nick} : </label>
+                                                <label class="messagecontent">${message}</label>
+                                                <label class="messagedate">${formatedDate}</label>
+                                                </div>
+                                            </li>`);    
         }, 'PUT');
     }
 

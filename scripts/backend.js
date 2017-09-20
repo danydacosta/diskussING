@@ -17,6 +17,7 @@ class Diskussing{
         frontend.$('.blur').toggleClass('displaynone');
         frontend.$('.modal').toggleClass('displaynone');
         frontend.$('.toggle').toggleClass('displaybehind');
+        frontend.$('.modaltitle').text('Create channel');
     }
 
     ShowEditChannelModal(title, description, keepChannel, owner){
@@ -25,6 +26,7 @@ class Diskussing{
         frontend.$('.channelownerlabel').toggleClass('displaynone');
         frontend.$('.channelowner').toggleClass('displaynone');
         frontend.$('.toggle').toggleClass('displaybehind');
+        frontend.$('.modaltitle').text(`Edit ${frontend.$('.currentchannel').text()}`);
     }
 
     ShowErrorModal(exception){

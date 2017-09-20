@@ -43,8 +43,10 @@ chrome.runtime.onMessage.addListener(
                     //Récupère le nom du salon et le message
                     let channel = frontend.$('.currentchannel').text().replace("-", " ");
                     let message = frontend.$('.messagetext').val();
-
+                    //Envoie le message au serveur
                     new Diskussing().server.SendMessage(channel, message);
+                    //Clear la textbox de saisie du message
+                    frontend.$('.messagetext').val('');
                 });
 
                 sendResponse({}); // sending back empty response to sender

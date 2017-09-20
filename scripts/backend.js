@@ -131,7 +131,9 @@ class Server{
         //Requête au serveur
         new Diskussing().server.Request(`user/${new Diskussing().server.connectedUser.id}/notices`, data => {
             data.forEach(function(element) {
-                console.log(element);
+                //Variables redondantes
+                let date;
+                let formatedDate;
                 switch(element.type){
                     case 'channelCreate':
                         console.log('[NOTICE] ' + element.channel.name + ' has been created!');
@@ -141,13 +143,28 @@ class Server{
 
                     case 'channelJoin':
                         console.log('[NOTICE] ' + element.nick + ' has been join the channel ' + element.channel.name);
+                        //Formate la date
+                        date = new Date(element.time);
+                        formatedDate = ("0" + date.getHours()).slice(-2) + ':' + ("0" + date.getMinutes()).slice(-2); 
+                        //Infos à afficher dans le chat
+                        let message = `${element.nick} has joined the channel`;
+                        //Ajoute un message dans l'objet salon
+                        new Diskussing().server.AddMessageToChat(element.channel.name, 'Server', message, formatedDate); 
+                        //Ajout du message (graphiquement)
+                        frontend.$(`.${element.channel.name.replace(" ", "-")}`).append(`<li class="message">
+                                                                                            <hr class="messagesperarator">
+                                                                                            <div class="messagetextcontent">
+                                                                                            <label class="messagecontent"><i>${message}</i></label>
+                                                                                            <label class="messagedate">${formatedDate}</label>
+                                                                                            </div>
+                                                                                        </li>`);
                     break;
 
                     case 'channelMessage':
                         console.log('[NOTICE] ' + element.nick + ' has sent the message ' + element.message + ' in the channel ' + element.channel.name);
                         //Formate la date
-                        let date = new Date(element.time);
-                        let formatedDate = ("0" + date.getHours()).slice(-2) + ':' + ("0" + date.getMinutes()).slice(-2); 
+                        date = new Date(element.time);
+                        formatedDate = ("0" + date.getHours()).slice(-2) + ':' + ("0" + date.getMinutes()).slice(-2); 
                         //Ajoute le message dans le chat seulement si c'est un message entrant
                         if(new Diskussing().server.connectedUser.nick != element.nick)
                         {

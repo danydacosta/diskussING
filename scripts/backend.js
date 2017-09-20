@@ -154,7 +154,7 @@ class Server{
                             //Ajoute un message dans l'objet salon
                             new Diskussing().server.AddMessageToChat(element.channel.name, element.nick, element.message, formatedDate);                            
                             //Ajout du message (graphiquement)
-                            frontend.$('.chat ul').append(`<li class="message">
+                            frontend.$(`.${element.channel.name.replace(" ", "-")}`).append(`<li class="message">
                                                                 <hr class="messagesperarator">
                                                                 <div class="messagetextcontent">
                                                                 <label class="messagefrom">${element.nick} : </label>

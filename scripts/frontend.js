@@ -49,6 +49,11 @@ chrome.runtime.onMessage.addListener(
                     frontend.$('.messagetext').val('');
                 });
 
+                //Affiche la modal de création de salon
+                frontend.$('.addbutton').click(() => {
+                    new Diskussing().ShowCreateChannelModal();
+                });
+
                 sendResponse({}); // sending back empty response to sender
             break;
         }

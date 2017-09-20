@@ -78,6 +78,8 @@ class Diskussing{
 
         //Affiche le salon désiré
         $(`.${channelName.replace(" ", "-")}`).toggleClass('displaynone');
+        //Affiche le nom du salon comme titre
+        frontend.$('.title').text(`${channelName}`);
         //Indique au frontend le salon actuellement affiché
         frontend.$('.currentchannel').val('');
         frontend.$('.currentchannel').val(`${channelName.replace(" ", "-")}`);
@@ -90,6 +92,8 @@ class Diskussing{
         });
         //génération d'un élément HTML "chat"
         frontend.$('.chat').append(`<ul class="messagelist ${channelName.replace(" ", "-")}"></ul>`);
+        //Affiche le nom du salon comme titre
+        frontend.$('.title').text(`${channelName}`);
         //Indique au frontend le salon actuellement affiché
         frontend.$('.currentchannel').val('');
         frontend.$('.currentchannel').val(`${channelName.replace(" ", "-")}`);

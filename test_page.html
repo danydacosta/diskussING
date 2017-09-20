@@ -6,35 +6,57 @@
   <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
-    <button class="connect">Connect</button>
-    <button class="create1">Create channel 1</button>
-    <button class="create2">Create channel 2</button><br>
-    <button class="send1">Send message to channel 1</button>
+    <button class="connect1">Connect with Test 1</button><br>
+    <button class="create1">Test 1 Create channel 1</button><br>
+    <button class="create2">Test 1 Create channel 2</button><br>
+    <button class="send1">Test 1 Send message to channel 1</button><br><br>
+    <button class="connect2">Connect with Test 2</button>   <br> 
+    <button class="join2">Test 2 joins the channel 1</button><br>
+    <button class="send2">Test 2 Send message to channel 1</button><br>
     <script>
-        let id;
+        let id1;
+        let id2;
 
-        $('.connect').click(() => {
-            Request(`users/register/Test/`, data => {
-                id = data.id;
-                console.log('Connected with id: ' + id + ' and name: ' + data.nick);
-                setInterval(FetchNotices, 2000);
+        $('.connect1').click(() => {
+            Request(`users/register/Test 1/`, data => {
+                id1 = data.id;
+                console.log('Connected with id: ' + id1 + ' and name: ' + data.nick);
+                setInterval(FetchNotices1, 2000);
+            }, 'POST');
+        });
+
+        $('.connect2').click(() => {
+            Request(`users/register/Test 2/`, data => {
+                id2 = data.id;
+                console.log('Connected with id: ' + id2 + ' and name: ' + data.nick);
+                setInterval(FetchNotices2, 2000);
             }, 'POST');
         });
 
         $('.create1').click(() => {
-            Request(`user/${id}/channels/Channel 1/join/`, data => {
+            Request(`user/${id1}/channels/Channel 1/join/`, data => {
                 console.log('Channel ' + data.channel.name + ' created !');
             }, 'PUT');
         });
 
         $('.create2').click(() => {
-            Request(`user/${id}/channels/Channel 2/join/`, data => {
+            Request(`user/${id1}/channels/Channel 2/join/`, data => {
                 console.log('Channel ' + data.channel.name + ' created !');
             }, 'PUT');
         });
 
         $('.send1').click(() => {
-            this.Request(`user/${id}/channels/Channel 1/say/?message=Hello`, data => {
+            this.Request(`user/${id1}/channels/Channel 1/say/?message=Hello`, data => {
+            }, 'PUT');
+        });
+
+        $('.join2').click(() => {            
+            this.Request(`user/${id2}/channels/Channel 1/join/`, data => {
+            }, 'PUT');
+        });
+
+        $('.send2').click(() => {
+            this.Request(`user/${id2}/channels/Channel 1/say/?message=Hello`, data => {
             }, 'PUT');
         });
 
@@ -54,9 +76,15 @@
             });
         }
 
-        function FetchNotices(){
+        function FetchNotices1(){
             //Requête au serveur
-            Request(`user/${id}/notices`, data => {
+            Request(`user/${id1}/notices`, data => {
+            });
+        }
+
+        function FetchNotices2(){
+            //Requête au serveur
+            Request(`user/${id2}/notices`, data => {
             });
         }
     </script>

@@ -72,31 +72,31 @@ class Diskussing{
 
     ShowChannel(channelName){
         //Cache tous les autres salons
-        $('.messagelist').each(function(i, obj) {
-            $(this).toggleClass('displaynone');
+        frontend.$('.messagelist').each(function(i, obj) {
+            $(this).addClass('displaynone');
         });
 
         //Affiche le salon désiré
-        $(`.${channelName.replace(" ", "-")}`).toggleClass('displaynone');
+        frontend.$(`.${channelName.replace(" ", "-")}`).toggleClass('displaynone');
         //Affiche le nom du salon comme titre
         frontend.$('.title').text(`${channelName}`);
         //Indique au frontend le salon actuellement affiché
-        frontend.$('.currentchannel').val('');
-        frontend.$('.currentchannel').val(`${channelName.replace(" ", "-")}`);
+        frontend.$('.currentchannel').text('');
+        frontend.$('.currentchannel').text(`${channelName.replace(" ", "-")}`);
     }
 
     CreateChannel(channelName){
         //Cache tous les autres salons
-        $('.messagelist').each(function(i, obj) {
+        frontend.$('.messagelist').each(function(i, obj) {
             $(this).toggleClass('displaynone');
         });
-        //génération d'un élément HTML "chat"
+        //génération d'un élément HTML "messagelist"
         frontend.$('.chat').append(`<ul class="messagelist ${channelName.replace(" ", "-")}"></ul>`);
         //Affiche le nom du salon comme titre
         frontend.$('.title').text(`${channelName}`);
         //Indique au frontend le salon actuellement affiché
-        frontend.$('.currentchannel').val('');
-        frontend.$('.currentchannel').val(`${channelName.replace(" ", "-")}`);
+        frontend.$('.currentchannel').text('');
+        frontend.$('.currentchannel').text(`${channelName.replace(" ", "-")}`);
     }
 
     HideChat(){
@@ -240,14 +240,14 @@ class Server{
             //Ajoute un message dans l'objet salon
             this.AddMessageToChat(channel, new Diskussing().server.connectedUser.nick, message, formatedDate);
             //Ajoute un message dans le chat(graphiquement)
-            frontend.$(`.messagelist ${channel.replace(" ", "-")}`).append(`<li class="message">
+            frontend.$(`.${channel.replace(" ", "-")}`).append(`<li class="message">
                                                 <hr class="messagesperarator">
                                                 <div class="messagetextcontent">
                                                 <label class="messagefrom">${new Diskussing().server.connectedUser.nick} : </label>
                                                 <label class="messagecontent">${message}</label>
                                                 <label class="messagedate">${formatedDate}</label>
                                                 </div>
-                                            </li>`);  
+                                            </li>`);
         }, 'PUT');
     }
 
@@ -301,8 +301,6 @@ class Server{
         for(var i = 0; i < channelArray.length; i++) {
             if(channelArray[i].name == channelName){
                 return channelArray[i];
-            } else {
-                return null;
             }
         }
     }

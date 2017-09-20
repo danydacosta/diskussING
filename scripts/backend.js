@@ -243,7 +243,7 @@ class Server{
             frontend.$(`.${channel.replace(" ", "-")}`).append(`<li class="message">
                                                 <hr class="messagesperarator">
                                                 <div class="messagetextcontent">
-                                                <label class="messagefrom">${new Diskussing().server.connectedUser.nick} : </label>
+                                                <label class="messagefrom"><b>${new Diskussing().server.connectedUser.nick}</b> : </label>
                                                 <label class="messagecontent">${message}</label>
                                                 <label class="messagedate">${formatedDate}</label>
                                                 </div>

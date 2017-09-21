@@ -79,12 +79,12 @@ class Diskussing{
         });
 
         //Affiche le salon désiré
-        frontend.$(`.${channelName.replace(" ", "-")}`).toggleClass('displaynone');
+        frontend.$(`.${channelName.replace(/ /g, "-")}`).toggleClass('displaynone');
         //Affiche le nom du salon comme titre
         frontend.$('.title').text(`${channelName}`);
         //Indique au frontend le salon actuellement affiché
         frontend.$('.currentchannel').text('');
-        frontend.$('.currentchannel').text(`${channelName.replace(" ", "-")}`);
+        frontend.$('.currentchannel').text(`${channelName.replace(/ /g, "-")}`);
     }
 
     CreateChannel(channelName){
@@ -93,12 +93,12 @@ class Diskussing{
             $(this).toggleClass('displaynone');
         });
         //génération d'un élément HTML "messagelist"
-        frontend.$('.chat').append(`<ul class="messagelist ${channelName.replace(" ", "-")}"></ul>`);
+        frontend.$('.chat').append(`<ul class="messagelist ${channelName.replace(/ /g, "-")}"></ul>`);
         //Affiche le nom du salon comme titre
         frontend.$('.title').text(`${channelName}`);
         //Indique au frontend le salon actuellement affiché
         frontend.$('.currentchannel').text('');
-        frontend.$('.currentchannel').text(`${channelName.replace(" ", "-")}`);
+        frontend.$('.currentchannel').text(`${channelName.replace(/ /g, "-")}`);
     }
 
     HideChat(){
@@ -153,7 +153,7 @@ class Server{
                         //Ajoute un message dans l'objet salon
                         new Diskussing().server.AddMessageToChat(element.channel.name, 'Server', message, formatedDate); 
                         //Ajout du message (graphiquement)
-                        frontend.$(`.${element.channel.name.replace(" ", "-")}`).append(`<li class="message">
+                        frontend.$(`.${element.channel.name.replace(/ /g, "-")}`).append(`<li class="message">
                                                                                             <hr class="messagesperarator">
                                                                                             <div class="messagetextcontent">
                                                                                             <label class="messagecontent"><i>${message}</i></label>
@@ -173,7 +173,7 @@ class Server{
                             //Ajoute un message dans l'objet salon
                             new Diskussing().server.AddMessageToChat(element.channel.name, element.nick, element.message, formatedDate);                            
                             //Ajout du message (graphiquement)
-                            frontend.$(`.${element.channel.name.replace(" ", "-")}`).append(`<li class="message">
+                            frontend.$(`.${element.channel.name.replace(/ /g, "-")}`).append(`<li class="message">
                                                                 <hr class="messagesperarator">
                                                                 <div class="messagetextcontent">
                                                                 <label class="messagefrom">${element.nick} : </label>
@@ -276,7 +276,7 @@ class Server{
             //Ajoute un message dans l'objet salon
             this.AddMessageToChat(channel, new Diskussing().server.connectedUser.nick, message, formatedDate);
             //Ajoute un message dans le chat(graphiquement)
-            frontend.$(`.${channel.replace(" ", "-")}`).append(`<li class="message">
+            frontend.$(`.${channel.replace(/ /g, "-")}`).append(`<li class="message">
                                                 <hr class="messagesperarator">
                                                 <div class="messagetextcontent">
                                                 <label class="messagefrom"><b>${new Diskussing().server.connectedUser.nick}</b> : </label>

@@ -315,7 +315,7 @@ html, body, .connect-container, .main-container, .messagetext {
 /* CHANNEL TITLE */
 .channeltitlelabel{
   position: fixed;
-  font-size: .4em;
+  font-size: .9em;
   left: 75px;
   top: 115px;
 }
@@ -331,7 +331,7 @@ html, body, .connect-container, .main-container, .messagetext {
 /* CHANNEL DESCRITPION */
 .channeldescriptionlabel{
   position: fixed;
-  font-size: .4em;
+  font-size: .9em;
   left: 75px;
   top: 145px;
 }
@@ -346,7 +346,7 @@ html, body, .connect-container, .main-container, .messagetext {
 /* KEEP CHANNEL */
 .channelkeeplabel{
   position: fixed;
-  font-size: .4em;
+  font-size: .9em;
   left: 75px;
   top: 205px;
 }
@@ -362,7 +362,7 @@ html, body, .connect-container, .main-container, .messagetext {
 /* CHANNEL OWNER */
 .channelownerlabel{
   position: fixed;
-  font-size: .4em;
+  font-size: .9em;
   left: 75px;
   top: 235px;
 }

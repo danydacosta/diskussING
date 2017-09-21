@@ -60,7 +60,7 @@ chrome.runtime.onMessage.addListener(
                     let title = frontend.$('.channeltitle').val();
                     let description = frontend.$('.description').val();
                     let channelKeep = frontend.$('.channelkeep').val();
-                    
+                    console.log('element clicked');
                 });
 
                 sendResponse({}); // sending back empty response to sender

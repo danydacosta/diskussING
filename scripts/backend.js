@@ -50,7 +50,7 @@ class Diskussing{
     SwitchSidebar(){
         frontend.$('.blur').toggleClass('displaynone');
         //Mise à jour des éléments dans la sidebar
-        this.server.FetchChannels();
+        this.server.FetchChannels(null);
     }
 
     HideSidebar(){
@@ -140,7 +140,7 @@ class Server{
                     case 'channelCreate':
                         console.log('[NOTICE] ' + element.channel.name + ' has been created!');
                         //Mise à jour des éléments dans la sidebar
-                        new Diskussing().server.FetchChannels();
+                        new Diskussing().server.FetchChannels(null);
                     break;
 
                     case 'channelJoin':
@@ -197,7 +197,7 @@ class Server{
         });
     }
 
-    FetchChannels(){
+    FetchChannels(callback){
         //Requête au serveur
         this.Request(`channels/`, data => {
             console.log('The channel fetch has discoverd ' + data);
@@ -221,6 +221,10 @@ class Server{
                     new Diskussing().UpdateChannelSideBar();
                 }
             });
+            //Retourne le callback seulement s'il a été passé en paramètre
+            if(typeof callback === 'function'){
+                callback();
+            }
         });
     }
 
@@ -239,14 +243,25 @@ class Server{
                 if(typeof new Diskussing().server.connectedUser.connectChannels == 'undefined' || new Diskussing().server.connectedUser.connectChannels.length == 0){
                     new Diskussing().ShowChat();
                 }
-                //Ajout du salon dans la liste des salons connectés de l'utilisateur            
-                new Diskussing().server.connectedUser.connectChannels.push(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.channels, channel));
-                //Crée le salon
+                //Si le salon n'a jamais été fetch
+                if(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.channels, channel) == null){
+                    //On le fetch
+                    new Diskussing().server.FetchChannels(function() {
+                        //Ajout du salon dans la liste des salons connectés de l'utilisateur
+                        new Diskussing().server.connectedUser.connectChannels.push(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.channels, channel));
+                    });
+                } else {
+                    //Ajout du salon dans la liste des salons connectés de l'utilisateur      null lorsqu'un utilisateur crée le salon      
+                    new Diskussing().server.connectedUser.connectChannels.push(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.channels, channel));
+                }
+                //Crée l'élément html salon
                 new Diskussing().CreateChannel(channel);
                 //Ferme la sidebar
                 new Diskussing().HideSidebar();
-                //Retourne une fonction une fois que la requête est terminée
-                callback();
+                //Retourne le callback seulement s'il a été passé en paramètre
+                if(typeof callback === 'function'){
+                    callback();
+                }
             }, 'PUT');
         }
     }
@@ -329,5 +344,7 @@ class Server{
                 return channelArray[i];
             }
         }
+
+        return null;
     }
 }

@@ -224,7 +224,7 @@ class Server{
         });
     }
 
-    JoinChannel(channel){
+    JoinChannel(channel, callback){
         //Détermine si l'utilisateur s'est déjà connecté à ce salon
         if(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.connectedUser.connectChannels, channel) != null){
             //Affiche le salon
@@ -245,6 +245,8 @@ class Server{
                 new Diskussing().CreateChannel(channel);
                 //Ferme la sidebar
                 new Diskussing().HideSidebar();
+                //Retourne une fonction une fois que la requête est terminée
+                callback();
             }, 'PUT');
         }
     }
@@ -275,7 +277,12 @@ class Server{
     }
 
     CreateChannel(name, description, keepChannel){
-
+        //Crée le salon (rejoint salon inexistant = crée)
+        this.JoinChannel(name, function(){
+            //Ferme la modal
+            new Diskussing().CloseModal('modal');
+            frontend.$('.blur').addClass('displaynone');
+        });
     }
 
     EditChannel(channel, name, description, keepChannel, owner){

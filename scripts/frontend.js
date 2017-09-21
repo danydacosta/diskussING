@@ -34,7 +34,7 @@ chrome.runtime.onMessage.addListener(
                 frontend.$('.sidebar').delegate('a', 'click', function() {
                     //Récupère le nom du salon
                     let channel = frontend.$(this).text();
-                    new Diskussing().server.JoinChannel(channel);
+                    new Diskussing().server.JoinChannel(channel, null);
                     console.log('Channel ' + channel + ' clicked!');
                 });
 
@@ -58,9 +58,10 @@ chrome.runtime.onMessage.addListener(
                 frontend.$('.modalsubmit').click(() => {
                     //Récupère les informations saisie
                     let title = frontend.$('.channeltitle').val();
-                    let description = frontend.$('.description').val();
+                    let description = frontend.$('.channeldescription').val();
                     let channelKeep = frontend.$('.channelkeep').val();
-                    console.log('element clicked');
+                    //Crée le salon
+                    new Diskussing().server.CreateChannel(title, description, channelKeep);
                 });
 
                 sendResponse({}); // sending back empty response to sender

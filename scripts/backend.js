@@ -90,7 +90,7 @@ class Diskussing{
     CreateChannel(channelName){
         //Cache tous les autres salons
         frontend.$('.messagelist').each(function(i, obj) {
-            $(this).toggleClass('displaynone');
+            $(this).addClass('displaynone');
         });
         //génération d'un élément HTML "messagelist"
         frontend.$('.chat').append(`<ul class="messagelist ${channelName.replace(/ /g, "-")}"></ul>`);
@@ -243,7 +243,7 @@ class Server{
                 if(typeof new Diskussing().server.connectedUser.connectChannels == 'undefined' || new Diskussing().server.connectedUser.connectChannels.length == 0){
                     new Diskussing().ShowChat();
                 }
-                //Si le salon n'a jamais été fetch
+                //Si le salon n'a jamais été fetch (lorsque l'on crée un salon)
                 if(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.channels, channel) == null){
                     //On le fetch
                     new Diskussing().server.FetchChannels(function() {
@@ -251,7 +251,7 @@ class Server{
                         new Diskussing().server.connectedUser.connectChannels.push(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.channels, channel));
                     });
                 } else {
-                    //Ajout du salon dans la liste des salons connectés de l'utilisateur      null lorsqu'un utilisateur crée le salon      
+                    //Ajout du salon dans la liste des salons connectés de l'utilisateur
                     new Diskussing().server.connectedUser.connectChannels.push(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.channels, channel));
                 }
                 //Crée l'élément html salon

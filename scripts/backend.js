@@ -68,7 +68,7 @@ class Diskussing{
         }, this);
     }
 
-    ShowChat(channel){
+    ShowChat(){
         frontend.$('.chat').toggleClass('displaynone');
     }
 
@@ -224,34 +224,34 @@ class Server{
         });
     }
 
-    JoinChannel(channel, callback){
+    JoinChannel(channelName, callback){
         //Détermine si l'utilisateur s'est déjà connecté à ce salon
-        if(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.connectedUser.connectChannels, channel) != null){
+        if(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.connectedUser.connectChannels, channelName) != null){
             //Affiche le salon
-            new Diskussing().ShowChannel(channel);
+            new Diskussing().ShowChannel(channelName);
             //Ferme la sidebar
             new Diskussing().HideSidebar();
         } else {
             //Requête au serveur
-            this.Request(`user/${this.connectedUser.id}/channels/${channel}/join/`, data => {
+            this.Request(`user/${this.connectedUser.id}/channels/${channelName}/join/`, data => {
                 console.log(this.connectedUser.nick + ' has join the channel ' + data.channel.name);
                 //Si c'est la première fois que l'utilisateur se connecte à un salon, on affiche "chat"
                 if(typeof new Diskussing().server.connectedUser.connectChannels == 'undefined' || new Diskussing().server.connectedUser.connectChannels.length == 0){
                     new Diskussing().ShowChat();
                 }
                 //Si le salon n'a jamais été fetch (lorsque l'on crée un salon)
-                if(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.channels, channel) == null){
+                if(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.channels, channelName) == null){
                     //On le fetch
                     new Diskussing().server.FetchChannels(function() {
                         //Ajout du salon dans la liste des salons connectés de l'utilisateur
-                        new Diskussing().server.connectedUser.connectChannels.push(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.channels, channel));
+                        new Diskussing().server.connectedUser.connectChannels.push(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.channels, channelName));
                     });
                 } else {
                     //Ajout du salon dans la liste des salons connectés de l'utilisateur
-                    new Diskussing().server.connectedUser.connectChannels.push(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.channels, channel));
+                    new Diskussing().server.connectedUser.connectChannels.push(new Diskussing().server.GetChannelObjectFromName(new Diskussing().server.channels, channelName));
                 }
                 //Crée l'élément html salon
-                new Diskussing().CreateChannel(channel);
+                new Diskussing().CreateChannel(channelName);
                 //Ferme la sidebar
                 new Diskussing().HideSidebar();
                 //Retourne le callback seulement s'il a été passé en paramètre
@@ -262,17 +262,17 @@ class Server{
         }
     }
 
-    SendMessage(channel, message){
+    SendMessage(channelName, message){
         //Requête au serveur
-        this.Request(`user/${this.connectedUser.id}/channels/${channel}/say/?message=${message}`, data => {
-            console.log(this.connectedUser.nick + ' sent ' + data.message + ' to the channel ' + channel);
+        this.Request(`user/${this.connectedUser.id}/channels/${channelName}/say/?message=${message}`, data => {
+            console.log(this.connectedUser.nick + ' sent ' + data.message + ' to the channel ' + channelName);
             //Formate la date       
             let date = new Date();            
             let formatedDate = ("0" + date.getHours()).slice(-2) + ':' + ("0" + date.getMinutes()).slice(-2); 
             //Ajoute un message dans l'objet salon
-            this.AddMessageToChat(channel, new Diskussing().server.connectedUser.nick, message, formatedDate);
+            this.AddMessageToChat(channelName, new Diskussing().server.connectedUser.nick, message, formatedDate);
             //Ajoute un message dans le chat(graphiquement)
-            frontend.$(`.${channel.replace(/ /g, "-")}`).append(`<li class="message">
+            frontend.$(`.${channelName.replace(/ /g, "-")}`).append(`<li class="message">
                                                 <hr class="messagesperarator">
                                                 <div class="messagetextcontent">
                                                 <label class="messagefrom"><b>${new Diskussing().server.connectedUser.nick}</b> : </label>

@@ -2,6 +2,10 @@
 
 A webextension chat client in order to send messages to people using the [Diskuss](https://github.com/SteeveDroz/diskuss) API. More informations in the [wiki](https://github.com/danydacosta/diskussING/wiki) section.
 
+![alt text](https://img11.hostingpics.net/pics/659652Capturede769cran20170923a768134401.png)
+![alt text](https://img11.hostingpics.net/pics/735166Capturede769cran20170923a768134419.png)
+![alt text](https://img11.hostingpics.net/pics/911774Capturede769cran20170923a768134441.png)
+
 ## Install
 
 Note: this webextension has been optimized to work with Mozilla Firefox. I do not guarantee diskussING to work with other browsers.

@@ -64,6 +64,19 @@ chrome.runtime.onMessage.addListener(
                     new Diskussing().server.CreateChannel(title, description, channelKeep);
                 });
 
+                //Appuie sur la touche enter
+                frontend.$('.messagetext').keypress(function(e) {
+                    if(e.which == 13) {
+                        //Récupère le nom du salon et le message
+                        let channel = frontend.$('.currentchannel').text().replace(/-/g, " ");
+                        let message = frontend.$('.messagetext').val();
+                        //Envoie le message au serveur
+                        new Diskussing().server.SendMessage(channel, message);
+                        //Clear la textbox de saisie du message
+                        frontend.$('.messagetext').val('');
+                    }
+                });
+
                 sendResponse({}); // sending back empty response to sender
             break;
         }

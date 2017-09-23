@@ -100,10 +100,6 @@ class Diskussing{
         frontend.$('.currentchannel').text('');
         frontend.$('.currentchannel').text(`${channelName.replace(/ /g, "-")}`);
     }
-
-    HideChat(){
-
-    }
 }
 
 class Server{
@@ -287,10 +283,6 @@ class Server{
         }, 'PUT');
     }
 
-    LeaveChannel(channel){
-
-    }
-
     CreateChannel(name, description, keepChannel){
         //Crée le salon (rejoint salon inexistant = crée)
         this.JoinChannel(name, function(){
@@ -298,18 +290,6 @@ class Server{
             new Diskussing().CloseModal('modal');
             frontend.$('.blur').addClass('displaynone');
         });
-    }
-
-    EditChannel(channel, name, description, keepChannel, owner){
-
-    }
-
-    FetchUsers(channel){
-
-    }
-
-    Disconnect(user){
-
     }
 
     Request(url, callback, type = 'GET', baseUrl = `http://${this.address}/`){
